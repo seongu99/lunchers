@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>식샤를 합시다</title>
+	<style>
+
+		#messageFormArea{
+			display:none;
+			text-align:center;
+		}
+
+		#userFormArea{
+			text-align: center;
+			margin-top: 20%;
+		}
+		.chat_log{ 
+			width: 95%; height: 400px; 
+		}
+      	.name{ 
+      		width: 13%; 
+      	}
+     	.message{ 
+     		width: 70%; 
+     	}
+    	.chat{ 
+    		width: 10%; 
+    	}
+
+	</style>
+</head>
+<body>
+
+	<div id="userFormArea">
+	<form id="userFrom">
+	<label>원하는 닉네임을 적어주세요.</label></br>
+		<input type="text" id="nickname">
+		<input type="submit" value="들어가기">
+
+	</form>
+	</div>
+<div id="messageFormArea">
+	<h3>점심메뉴 정하기 채팅방</h3>
+	 <div>
+      <textarea id="chatLog" class="chat_log" readonly></textarea>
+    </div>
+    <form id="chat">
+      <input id="name" class="name" type="text" readonly>
+      <input id="message" class="message" type="text">
+      <input type="submit" class="chat" value="보내기"/>
+    </form>
+    <div id="box" class="box">
+</div>
+	
+
+</body>
+</html>
+<script src="/socket.io/socket.io.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+<script>
+$(function(){
+	var socket = io('http://localhost');
+
+  $('#userFrom').submit(function(e){
+  	e.preventDefault();
+  	socket.emit('new user', $('#nickname').val(), function(data){
+  		if(data){
+  			$('#userFormArea').hide();
+   			$('#messageFormArea').show();
+  		}
+  	});
+  	$('#nickname').val('');
+  });
+
+  $('#chat').submit(function(e){
+  	e.preventDefault();
+  	socket.emit('send message', $('#name').val(), $('#message').val());
+  	$('#message').val("");
+
+  });
+
+  socket.on('receive message', function(msg){
+  	$('#chatLog').append(msg+ "\n");
+  	$('#chatLog').animate({scrollTop: $(document).height()}, "slow");
+  });
+  socket.on('alert new user', function(newUser){
+  	$('#chatLog').append(newUser+ " 님께서 들어왔습니다." + "\n");
+  });
+
+  socket.on('change name', function(name){
+  	$('#name').val(name);
+  });
+
+});
+  
+ </script>
