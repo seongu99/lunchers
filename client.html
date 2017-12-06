@@ -14,17 +14,17 @@
 			text-align: center;
 			margin-top: 20%;
 		}
-		.chat_log{ 
-			width: 95%; height: 400px; 
+		.chat_log{
+			width: 95%; height: 400px;
 		}
-      	.name{ 
-      		width: 13%; 
+      	.name{
+      		width: 13%;
       	}
-     	.message{ 
-     		width: 70%; 
+     	.message{
+     		width: 70%;
      	}
-    	.chat{ 
-    		width: 10%; 
+    	.chat{
+    		width: 10%;
     	}
 
 	</style>
@@ -51,7 +51,7 @@
     </form>
     <div id="box" class="box">
 </div>
-	
+
 
 </body>
 </html>
@@ -80,16 +80,16 @@ $(function(){
       socket.emit('send message', $('#name').val(), $('#message').val());
       $('#message').val("");
     }
-  	
+
   });
 
   socket.on('receive message', function(msg){
   	$('#chatLog').append(msg+ "\n");
     $("#chatLog").scrollTop($("#chatLog")[0].scrollHeight);
-  	
+
   });
   socket.on('alert new user', function(newUser){
-  	$('#chatLog').append(newUser+ " 님께서 들어왔습니다." + "\n");
+  	$('#chatLog').append(newUser+ " 님이 들어왔습니다." + "\n");
   });
 
   socket.on('change name', function(name){
@@ -97,5 +97,5 @@ $(function(){
   });
 
 });
-  
+
  </script>
